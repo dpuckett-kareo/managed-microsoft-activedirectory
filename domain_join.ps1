@@ -233,21 +233,37 @@ function Perform-sga {
   if ($forceFlag -eq $true) {
       $body.force = $true
   }
+  $forceFlag 
+
 
   $bodyJson = $body|ConvertTo-Json
+  $bodyJson
+
   $domainJoinUrl = "https://$endpoint/v1/$domainName" + ':domainJoinMachine'
+  $domainJoinUrl
+
+
   $accessTokenResponse = Get-Metadata $tokenUrl
+  $accessTokenResponse
 
   $accessToken = $accessTokenResponse.access_token
+  $accessToken
 
   $header = @{
    'Accept'= 'application/json'
    'Authorization'="Bearer $accessToken"
   }
-  $response = Invoke-RestMethod -Uri $domainJoinUrl -Method POST -Body $bodyJson -Headers $header -ContentType 'application/json'
-  $blob = $response.domainJoinBlob
 
-  Write-DjoinBlob -Blob $blob -Verbose
+  $header
+
+
+  $response = Invoke-RestMethod -Uri $domainJoinUrl -Method POST -Body $bodyJson -Headers $header -ContentType 'application/json'
+  $response
+
+  $blob = $response.domainJoinBlob
+  $blob
+
+  #Write-DjoinBlob -Blob $blob -Verbose
 
   $ComputerDn = ([ADSISEARCHER]"sAMAccountName=$($env:COMPUTERNAME)$").FindOne().Path
   $ComputerDn
