@@ -228,7 +228,7 @@ function Perform-sga {
 
   $body
 
-  <#
+  #
   $forceFlag = Get-Metadata "$attributeURL/$forceKey"
   if ($forceFlag -eq $true) {
       $body.force = $true
@@ -245,17 +245,9 @@ function Perform-sga {
    'Authorization'="Bearer $accessToken"
   }
   $response = Invoke-RestMethod -Uri $domainJoinUrl -Method POST -Body $bodyJson -Headers $header -ContentType 'application/json'
-  #$blob = $response.domainJoinBlob
+  $blob = $response.domainJoinBlob
 
-  #Write-DjoinBlob -Blob $blob -Verbose
-
-  #Write-Output 'Performing domain join'
-  #$processResponse = START-PROCESS Djoin -windowstyle hidden -ArgumentList "/requestodj /loadfile $domainJoinFile /windowspath $env:SystemRoot /localos" -PassThru -Wait
-  #if ($processResponse.ExitCode -ne 0) {
-  #  throw "Domain join command failed : $processResponse"
-  #}
-
-#>
+  Write-DjoinBlob -Blob $blob -Verbose
 
   $ComputerDn = ([ADSISEARCHER]"sAMAccountName=$($env:COMPUTERNAME)$").FindOne().Path
   $ComputerDn
@@ -263,8 +255,19 @@ function Perform-sga {
   $GroupDn
   $Group = [ADSI]"$GroupDn"
   $Group
-  $Group.Add($ComputerDn)
+  
 
+
+
+  Write-Output 'Performing sga test'
+  $Group.Add($ComputerDn) 
+#  if ($processResponse.ExitCode -ne 0) {
+  #  throw "Domain join command failed : $processResponse"
+  #}
+
+#>
+
+ 
   Write-Output 'sga finished'
   #Write-DjoinStatus -djoinStatus 'success' -djoinFailureMessage 'nil'
 
