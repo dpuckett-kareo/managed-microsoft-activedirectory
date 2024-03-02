@@ -200,11 +200,16 @@ function Perform-DomainJoin {
 
 function Perform-sga {
   $domainName = Get-Metadata "$attributeURL/$domainKey"
+  $domainName
+
+
   $fullTokenResponse = Get-Metadata $fullTokenUrl
+  $fullTokenResponse
   # Set default ou name as empty string
   $ouName = ''
   try {
    $ouName = (Get-Metadata "$attributeURL/$ouNameKey")
+   $ouName
   }
   catch {
     Write-Output 'OUName StatusCode:' $_.Exception.Response.StatusCode.value__
@@ -212,11 +217,18 @@ function Perform-sga {
   }
 
   $hostName = hostname
+  $hostName
+
+
   $body = @{
       domain = $domainName
       ouName = $ouName
       vmIdToken = $fullTokenResponse
   }
+
+  $body
+
+  <#
   $forceFlag = Get-Metadata "$attributeURL/$forceKey"
   if ($forceFlag -eq $true) {
       $body.force = $true
@@ -242,6 +254,8 @@ function Perform-sga {
   #if ($processResponse.ExitCode -ne 0) {
   #  throw "Domain join command failed : $processResponse"
   #}
+
+#>
 
   $ComputerDn = ([ADSISEARCHER]"sAMAccountName=$($env:COMPUTERNAME)$").FindOne().Path
   $ComputerDn
